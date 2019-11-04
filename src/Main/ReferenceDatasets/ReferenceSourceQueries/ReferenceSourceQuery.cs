@@ -52,7 +52,7 @@ namespace USC.GISResearchLab.Geocoding.Core.ReferenceDatasets.ReferenceSourceQue
                     {
                         foreach (SqlParameter parameter in SqlCommand.Parameters)
                         {
-                            ret = "DECLARE @" + parameter.ParameterName + parameter.SqlValue + " ;" ;
+                            ret = "DECLARE @" + parameter.ParameterName + parameter.SqlValue + " ;";
                         }
                     }
 
@@ -64,7 +64,7 @@ namespace USC.GISResearchLab.Geocoding.Core.ReferenceDatasets.ReferenceSourceQue
 
         public TimeSpan Duration
         {
-            get 
+            get
             {
                 TimeSpan ret = new TimeSpan(99, 00, 00);
                 if (TimeStart != null && TimeEnd != null)
