@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Reflection;
 using System.Xml.Serialization;
 using USC.GISResearchLab.Common.Addresses;
 using USC.GISResearchLab.Common.Geometries;
@@ -145,6 +146,28 @@ namespace USC.GISResearchLab.Geocoding.Core.ReferenceDatasets.ReferenceSourceQue
                 }
             }
             MatchTypesString = FeatureMatcher.GetFeatureMatchTypeName(FeatureMatchType);
+
+#if DEBUG
+            try
+            {
+                string sqlParams = this.SourceName + " -- Building SQL & Parameters - \n\n";
+                SqlParameterCollection parameterCollection = sqlCommand.Parameters;
+                for (int i = 0; i < parameterCollection.Count; i++)
+                {
+                    sqlParams += "\n declare @" + parameterCollection[i].ParameterName + " as nvarchar(255) ";
+                    sqlParams += "\n set @" + parameterCollection[i].ParameterName + " ='" + parameterCollection[i].Value + "';";
+                }
+
+                sqlParams += "\n\n";
+                sqlParams += sqlCommand.CommandText;
+                Serilog.Log.Verbose(this.GetType().Name + " " + MethodBase.GetCurrentMethod().Name + " SQLParams: " + sqlParams);
+            }
+            catch (Exception ex)
+            {
+                Serilog.Log.Warning(this.GetType().Name + " " + MethodBase.GetCurrentMethod().Name + " Unable to SerializeObject SQLParams: ");
+            }
+#endif
+
         }
 
         public void Start()
